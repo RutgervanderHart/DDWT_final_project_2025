@@ -1,0 +1,37 @@
+BASE HTML
+menubar	- 	homeknop (index-knop), 
+		profiel (edit profiel), 
+		login, (logout afhankelijk van ingelogd zijn), 
+		register
+
+
+footer - 	about us
+		copyright
+
+
+PROFIEL HTML
+profiel
+geschreven reviews
+/eigen snackbars
+edit knop
+
+LOGIN PAGINA
+inlog
+
+REGISTER PAGINA
+registeren
+
+INDEX
+feed met snackbars
+
+ERROR
+error messages (low prio)
+
+VIEW SNACKBAR
+snackbar met info
+bijbehorende reviews
+
+WRITE REVIEW
+schrijf review
+/edit review (als eigenaar van review, laadt dan gewoon de al geschreven review om aan te passen)
+add review

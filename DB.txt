@@ -1,0 +1,23 @@
+TABLE users
+	username
+	user_id
+	geboortedatum
+	type user (user/owner/admin)
+	review_id (voor alle geschreven reviews)
+	snackbar_id (voor alle snackbarren in beheer)
+	wachtwoord (hashed?)
+	api_tokens
+
+TABLE snackbars
+	snackbarnaam
+	user_id (owner)
+	snackbar_id
+	review_id's (bijbehorende reviews)
+
+TABLE reviews
+	review_id
+	user_id
+	snackbar_id
+	tekst
+	sterren
+	
