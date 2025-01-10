@@ -1,1 +1,1 @@
-FLASK_APP=sneckerball/sneckerball.py
+FLASK_APP=sneckerball.py
