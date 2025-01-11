@@ -4,7 +4,10 @@
     <h1>Hi, {{ current_user.username }}!</h1>
     {% for snackbar in snackbars %}
     <p>
-    {{ snackbar.name }} : <b>{{ snackbar.about }}</b> : <b>{{ snackbar.owner.username }} </b>
+        <form action="{{ url_for('snackbar', snackbar_name=snackbar.name) }}">
+            <label>{{ snackbar.name }}</label>
+            <input type="submit" value="view">
+        </form>
     </p>
     {% endfor %}
 {% endblock %}

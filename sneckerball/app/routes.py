@@ -19,6 +19,13 @@ def index():
     snackbars = db.session.scalars(sa.select(Snackbar)).all()
     return render_template('index.html', title='Home', snackbars=snackbars)
 
+@app.route('/snackbar/<snackbar_name>', )
+def snackbar(snackbar_name):
+    current_snackbar = db.first_or_404(
+        sa.select(Snackbar).where(Snackbar.name == snackbar_name)
+        )
+    return render_template('snackbar.html', snackbar=current_snackbar)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ snackbar.name }}!</h1>
+    <p>Owner: {{ snackbar.owner.username }}</p>
+    <p>About: {{ snackbar.about }}</p>
+{% endblock %}
