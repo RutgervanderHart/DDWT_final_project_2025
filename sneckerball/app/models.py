@@ -32,12 +32,23 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
     
+    def written_reviews(self):
+        Author = so.aliased(User)
+        return (
+            sa.select(Review)
+            .join(Review.author.of_type(Author))
+            .where(Author.id == self.id)
+            .order_by(Review.timestamp.desc())
+        )
+    
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
 class Snackbar(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    body: so.Mapped[str] = so.mapped_column(sa.String(140))
+    name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,
+                                                unique=True)
+    about: so.Mapped[str] = so.mapped_column(sa.String(140))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                index=True)
     owner: so.Mapped[User] = so.relationship(back_populates='snackbars')

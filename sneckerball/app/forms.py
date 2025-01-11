@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 from app import db
-from app.models import User
+from app.models import User, Snackbar
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -46,3 +46,20 @@ class EditProfileForm(FlaskForm):
                 User.username == username.data))
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+class AddSnackbarForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    about = TextAreaField('About', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Add')
+
+    def validate_name(self, name):
+        snackbar = db.session.scalar(sa.select(Snackbar).where(
+            Snackbar.name == name.data))
+        if snackbar is not None:
+            raise ValidationError('Please use a different name.')
+
+
+class ReviewForm(FlaskForm):
+    review = TextAreaField('Say something', validators=[
+        DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')

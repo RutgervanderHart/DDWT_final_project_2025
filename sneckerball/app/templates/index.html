@@ -2,7 +2,20 @@
 
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
-    {% for post in posts %}
-    <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.review.label }}<br>
+            {{ form.review(cols=32, rows=4) }}<br>
+            {% for error in form.review.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% for review in reviews %}
+    <p>
+    {{ review.author.username }} says: <b>{{ review.body }}</b>
+    </p>
     {% endfor %}
 {% endblock %}
