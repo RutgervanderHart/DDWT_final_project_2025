@@ -15,17 +15,9 @@ def before_request():
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-@login_required
 def index():
-    form = ReviewForm()
-    if form.validate_on_submit():
-        review = Review(body=form.review.data, author=current_user)
-        db.session.add(review)
-        db.session.commit()
-        flash('Your review is now live!')
-        return redirect(url_for('index'))
-    reviews = db.session.scalars(current_user.written_reviews()).all()
-    return render_template('index.html', title='Home',form=form, reviews=reviews)
+    snackbars = db.session.scalars(sa.select(Snackbar)).all()
+    return render_template('index.html', title='Home', snackbars=snackbars)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -101,3 +93,16 @@ def add_snackbar():
         flash('Congratulations, you succesfully added a snackbar!')
         return redirect(url_for('index'))
     return render_template('add_snackbar.html', title='Add Snackbar', form=form)
+
+@app.route('/write_review', methods=['GET', 'POST'])
+@login_required
+def write_review():
+    form = ReviewForm()
+    if form.validate_on_submit():
+        review = Review(body=form.review.data, author=current_user)
+        db.session.add(review)
+        db.session.commit()
+        flash('Your review is now live!')
+        return redirect(url_for('index'))
+    reviews = db.session.scalars(current_user.written_reviews()).all()
+    return render_template('write_review.html', title='Write Review',form=form, reviews=reviews)
