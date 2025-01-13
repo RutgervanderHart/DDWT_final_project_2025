@@ -24,7 +24,10 @@ def snackbar(snackbar_name):
     current_snackbar = db.first_or_404(
         sa.select(Snackbar).where(Snackbar.name == snackbar_name)
         )
-    return render_template('snackbar.html', snackbar=current_snackbar)
+    reviews = db.session.scalars(
+        sa.select(Review).where(Review.subject == current_snackbar)
+    ).all()
+    return render_template('snackbar.html', snackbar=current_snackbar,reviews=reviews)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -64,14 +67,15 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/user/<username>')
-@login_required
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
-    reviews = [
-        {'author': user, 'body': 'Test review #1'},
-        {'author': user, 'body': 'Test review #2'}
-    ]
-    return render_template('user.html', user=user, reviews=reviews)
+    reviews = db.session.scalars(
+        sa.select(Review).where(Review.author == user)
+    ).all()
+    snackbars = db.session.scalars(
+        sa.select(Snackbar).where(Snackbar.owner == user)
+        ).all()
+    return render_template('user.html', user=user, reviews=reviews,snackbars=snackbars)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -82,7 +86,7 @@ def edit_profile():
         current_user.about_me = form.about_me.data
         db.session.commit()
         flash('Your changes have been saved.')
-        return redirect(url_for('edit_profile'))
+        return redirect(url_for('user', username=current_user.username))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
@@ -101,15 +105,18 @@ def add_snackbar():
         return redirect(url_for('index'))
     return render_template('add_snackbar.html', title='Add Snackbar', form=form)
 
-@app.route('/write_review', methods=['GET', 'POST'])
+@app.route('/write_review/<snackbar_name>', methods=['GET', 'POST'])
 @login_required
-def write_review():
+def write_review(snackbar_name):
     form = ReviewForm()
+    current_snackbar = db.first_or_404(
+        sa.select(Snackbar).where(Snackbar.name == snackbar_name)
+        )
     if form.validate_on_submit():
-        review = Review(body=form.review.data, author=current_user)
+        review = Review(body=form.review.data, author=current_user, subject=current_snackbar)
         db.session.add(review)
         db.session.commit()
         flash('Your review is now live!')
-        return redirect(url_for('index'))
+        return redirect(url_for('snackbar', snackbar_name=snackbar_name))
     reviews = db.session.scalars(current_user.written_reviews()).all()
     return render_template('write_review.html', title='Write Review',form=form, reviews=reviews)

@@ -1,13 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
+    <h1>Sneckerball!</h1>
     {% for snackbar in snackbars %}
-    <p>
-        <form action="{{ url_for('snackbar', snackbar_name=snackbar.name) }}">
-            <label>{{ snackbar.name }}</label>
-            <input type="submit" value="view">
-        </form>
-    </p>
+        {% include '_snackbar.html' %}
     {% endfor %}
 {% endblock %}

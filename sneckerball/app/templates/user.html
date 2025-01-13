@@ -15,6 +15,11 @@
         </tr>
     </table>
     <hr>
+    <h2>Snackbars:</h2>
+    {% for snackbar in snackbars %}
+        {% include '_snackbar.html' %}
+    {% endfor %}
+    <h2>Reviews:</h2>
     {% for review in reviews %}
         {% include '_review.html' %}
     {% endfor %}

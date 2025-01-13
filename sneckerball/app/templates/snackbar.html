@@ -2,6 +2,11 @@
 
 {% block content %}
     <h1>{{ snackbar.name }}!</h1>
-    <p>Owner: {{ snackbar.owner.username }}</p>
+    <p>Owner: <a href="{{ url_for('user', username=snackbar.owner.username) }}">{{ snackbar.owner.username }}</a></p>
     <p>About: {{ snackbar.about }}</p>
+    <h2>Reviews:</h2>
+    {% for review in reviews %}
+        {% include '_review.html' %}
+    {% endfor %}
+    <a href="{{ url_for('write_review', snackbar_name=snackbar.name) }}">Write Review</a>
 {% endblock %}

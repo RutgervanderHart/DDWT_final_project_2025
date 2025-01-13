@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h1>Write Review For: {{ snackbar.name }}</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -12,9 +13,4 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-    {% for review in reviews %}
-    <p>
-    {{ review.author.username }} says: <b>{{ review.body }}</b>
-    </p>
-    {% endfor %}
 {% endblock %}
