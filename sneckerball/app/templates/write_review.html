@@ -7,7 +7,7 @@
         <p>
             {{ form.body.label }}<br>
             {{ form.body(cols=32, rows=4) }}<br>
-            {% for error in form.review.errors %}
+            {% for error in form.body.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>

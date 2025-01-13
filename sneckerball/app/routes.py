@@ -149,7 +149,7 @@ def write_review(snackbar_name):
         sa.select(Snackbar).where(Snackbar.name == snackbar_name)
         )
     if form.validate_on_submit():
-        review = Review(body=form.review.data, author=current_user, subject=current_snackbar)
+        review = Review(body=form.body.data, author=current_user, subject=current_snackbar)
         db.session.add(review)
         db.session.commit()
         flash('Your review is now live!')
