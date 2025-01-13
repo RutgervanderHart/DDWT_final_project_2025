@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, ReviewForm, AddSnackbarForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm,EditSnackbarForm, ReviewForm, AddSnackbarForm
 from app.models import User, Review, Snackbar
 
 @app.before_request
@@ -93,6 +93,42 @@ def edit_profile():
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
 
+@app.route('/edit_snackbar/<snackbar_name>', methods=['GET', 'POST'])
+@login_required
+def edit_snackbar(snackbar_name):
+    current_snackbar = db.first_or_404(
+        sa.select(Snackbar).where(Snackbar.name == snackbar_name)
+        )
+    form = EditSnackbarForm(current_snackbar.name)
+    if form.validate_on_submit():
+        current_snackbar.name = form.name.data
+        current_snackbar.about = form.about.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('snackbar', snackbar_name=current_snackbar.name))
+    elif request.method == 'GET':
+        form.name.data = current_snackbar.name
+        form.about.data = current_snackbar.about
+    return render_template('edit_snackbar.html', title='Edit Snackbar',
+                           form=form)
+
+@app.route('/edit_review/<review>', methods=['GET', 'POST'])
+@login_required
+def edit_review(review):
+    current_review = db.first_or_404(
+        sa.select(Review).where(Review.id == review)
+        )
+    form = ReviewForm()
+    if form.validate_on_submit():
+        current_review.body = form.body.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('snackbar', snackbar_name=current_review.subject.name))
+    elif request.method == 'GET':
+        form.body.data = current_review.body
+    return render_template('edit_review.html', title='Edit Review',
+                           form=form)
+
 @app.route('/add_snackbar', methods=['GET', 'POST'])
 @login_required
 def add_snackbar():
@@ -119,4 +155,4 @@ def write_review(snackbar_name):
         flash('Your review is now live!')
         return redirect(url_for('snackbar', snackbar_name=snackbar_name))
     reviews = db.session.scalars(current_user.written_reviews()).all()
-    return render_template('write_review.html', title='Write Review',form=form, reviews=reviews)
+    return render_template('write_review.html', title='Write Review',form=form, reviews=reviews, snackbar=current_snackbar)

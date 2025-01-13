@@ -4,6 +4,9 @@
     <h1>{{ snackbar.name }}!</h1>
     <p>Owner: <a href="{{ url_for('user', username=snackbar.owner.username) }}">{{ snackbar.owner.username }}</a></p>
     <p>About: {{ snackbar.about }}</p>
+    {% if current_user == snackbar.owner %}
+    <p><a href="{{ url_for('edit_snackbar', snackbar_name=snackbar.name) }}">Edit Snackbar</a></p>
+    {% endif %}
     <h2>Reviews:</h2>
     {% for review in reviews %}
         {% include '_review.html' %}

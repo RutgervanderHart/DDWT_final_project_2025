@@ -3,4 +3,9 @@
             <td><img src="{{ review.author.avatar(36) }}"></td>
             <td><a href="{{ url_for('user', username=review.author.username) }}">{{ review.author.username }}</a> says: <br>{{ review.body }}</td>
         </tr>
+        <tr>
+            {% if current_user ==  review.author %}
+            <td><a href="{{ url_for('edit_review', review=review.id) }}">Edit</a></td>
+            {% endif %}
+        </tr>
     </table>

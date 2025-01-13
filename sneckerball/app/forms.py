@@ -43,9 +43,28 @@ class EditProfileForm(FlaskForm):
     def validate_username(self, username):
         if username.data != self.original_username:
             user = db.session.scalar(sa.select(User).where(
-                User.username == username.data))
+                User.username == username.data
+                ))
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+class EditSnackbarForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    about = TextAreaField('About', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Edit  ')
+    
+    def __init__(self, original_name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_name = original_name
+
+    def validate_name(self, name):
+        if name.data  != self.original_name:
+            snackbar = db.session.scalar(sa.select(Snackbar).where(
+                Snackbar.name == name.data
+                ))
+            if snackbar is not None:
+                raise ValidationError('Please use a different name.')
+
 
 class AddSnackbarForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -60,6 +79,6 @@ class AddSnackbarForm(FlaskForm):
 
 
 class ReviewForm(FlaskForm):
-    review = TextAreaField('Say something', validators=[
+    body = TextAreaField('Say something', validators=[
         DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
