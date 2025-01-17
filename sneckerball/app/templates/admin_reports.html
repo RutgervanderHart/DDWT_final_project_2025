@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Admin Only: Report Overview</h1>
+
+<!-- Helper function to render action buttons -->
+{% macro report_actions(report) %}
+    <!-- Mark Resolved -->
+    <form method="post" action="{{ url_for('resolve_report', report_id=report.id) }}" style="display:inline;">
+        <button type="submit">Resolve</button>
+    </form>
+    <!-- Reject -->
+    <form method="post" action="{{ url_for('reject_report', report_id=report.id) }}" style="display:inline;">
+        <button type="submit">Reject</button>
+    </form>
+    {% if report.reported_user %}
+    <!-- Soft Delete User -->
+    <form method="post" action="{{ url_for('delete_user_by_report', report_id=report.id) }}" style="display:inline;">
+        <button type="submit">Delete User</button>
+    </form>
+    {% elif report.reported_snackbar %}
+    <!-- Soft Delete Snackbar -->
+    <form method="post" action="{{ url_for('delete_snackbar_by_report', report_id=report.id) }}" style="display:inline;">
+        <button type="submit">Delete Snackbar</button>
+    </form>
+    {% endif %}
+{% endmacro %}
+
+<!-- Helper function to render reports in a table -->
+{% macro report_table(reports, type_label) %}
+<h2>{{ type_label }}</h2>
+{% if reports %}
+    <table border="1">
+        <tr>
+            <th>Reported Entity</th>
+            <th>Reporter</th>
+            <th>Reason</th>
+            <th>Details</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+        </tr>
+        {% for report in reports %}
+        <tr>
+            <td>
+                {% if report.reported_user %}
+                <a href="{{ url_for('user', username=report.reported_user.username) }}">
+                    {{ report.reported_user.username }}
+                </a>
+                {% elif report.reported_snackbar %}
+                <a href="{{ url_for('snackbar', snackbar_name=report.reported_snackbar.name) }}">
+                    {{ report.reported_snackbar.name }}
+                </a>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ url_for('user', username=report.reporter.username) }}">
+                    {{ report.reporter.username }}
+                </a>
+            </td>
+            <td>{{ report.reason }}</td>
+            <td>{{ report.details }}</td>
+            <td>{{ report.timestamp }}</td>
+            <td>{{ report_actions(report) }}</td>  <!-- this calls the macro for action buttons, prevents duplication :)-->
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No {{ type_label.lower() }} found.</p>
+{% endif %}
+{% endmacro %}
+
+<!-- Render open user reports -->
+{{ report_table(grouped_reports.open_user_reports, "Open User Reports") }}
+
+<!-- Render open snackbar reports -->
+{{ report_table(grouped_reports.open_snackbar_reports, "Open Snackbar Reports") }}
+
+<!-- Render resolved reports -->
+{{ report_table(grouped_reports.resolved_reports, "Resolved Reports") }}
+
+<!-- Render rejected reports -->
+{{ report_table(grouped_reports.rejected_reports, "Rejected Reports") }}
+
+{% endblock %}

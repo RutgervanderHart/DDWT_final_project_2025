@@ -6,6 +6,13 @@
             <td><img src="{{ user.avatar(128) }}"></td>
             <td>
                 <h1>User: {{ user.username }}</h1>
+                {% if current_user.is_authenticated and current_user != user %}
+                    <p>
+                      <a href="{{ url_for('file_report', target_type='user', target_identifier=user.username) }}">
+                         Report {{ user.username }}
+                      </a>
+                    </p>
+                {% endif %}
                 {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
                 {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
                 {% if user == current_user %}

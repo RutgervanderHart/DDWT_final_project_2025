@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Report: {{ reported_name }}</h1>
+    <p>Reporting a {{ target_type }}. Please select a reason:</p>
+    <form method="post" action="">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.reason.label }}<br>
+            {{ form.reason() }}<br>
+            {% for error in form.reason.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.details.label }}<br>
+            {{ form.details(cols=50, rows=3) }}<br>
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+{% endblock %}

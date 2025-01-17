@@ -2,6 +2,13 @@
 
 {% block content %}
     <h1>{{ snackbar.name }}!</h1>
+    {% if current_user.is_authenticated %}
+        <p>
+          <a href="{{ url_for('file_report', target_type='snackbar', target_identifier=snackbar.name) }}">
+            Report This Snackbar
+          </a>
+        </p>
+    {% endif %}
     <p>Owner: <a href="{{ url_for('user', username=snackbar.owner.username) }}">{{ snackbar.owner.username }}</a></p>
     <p>About: {{ snackbar.about }}</p>
     {% if current_user == snackbar.owner %}

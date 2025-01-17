@@ -10,12 +10,15 @@
     <body>
         <div>sneckerball: 
             <a href="{{ url_for('index') }}">Home</a>
-            {% if current_user.is_anonymous %}
+                {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}">Login</a>
             {% else %}
-            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-            <a href="{{ url_for('add_snackbar') }}">Add Snackbar</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+                <a href="{{ url_for('add_snackbar') }}">Add Snackbar</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+                {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_reports') }}">Admin Panel</a>
+                {% endif %}
             {% endif %}
         </div>
         <hr>

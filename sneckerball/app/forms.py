@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, RadioField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 from app import db
@@ -82,3 +82,26 @@ class ReviewForm(FlaskForm):
     body = TextAreaField('Say something', validators=[
         DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
+
+class ReportForm(FlaskForm):
+    reason = RadioField('Reason', validators=[DataRequired()])
+    details = TextAreaField('Additional details (optional)', validators=[
+        DataRequired(), Length(min=1, max=500)])
+    submit = SubmitField('Submit Report')
+
+    def __init__(self, target_type=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if target_type == 'user':
+            self.reason.choices = [
+                ('harassment', 'Harassment'),
+                ('spam', 'Spamming reviews'),
+                ('impersonation', 'Impersonating another user or admin'),
+                ('other', 'Other, please clarify below'),
+            ]
+        elif target_type == 'snackbar':
+            self.reason.choices = [
+                ('fake', 'Fake Listing'),
+                ('offensive_name', 'Offensive Name'),
+                ('health_concerns', 'Unsafe Health Practices'),
+                ('other', 'Other, please clarify below'),
+            ]
