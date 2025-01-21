@@ -5,67 +5,85 @@
 
 <!-- Helper function to render action buttons -->
 {% macro report_actions(report) %}
+<div class="d-flex flex-column align-items-stretch">
     <!-- Mark Resolved -->
-    <form method="post" action="{{ url_for('resolve_report', report_id=report.id) }}" style="display:inline;">
-        <button type="submit">Resolve</button>
+    <form method="post" action="{{ url_for('resolve_report', report_id=report.id) }}">
+        <button class="btn btn-success btn-sm action-btn" type="submit"
+                {% if report.status == 'resolved' %}disabled{% endif %}>
+            Resolve
+        </button>
     </form>
     <!-- Reject -->
-    <form method="post" action="{{ url_for('reject_report', report_id=report.id) }}" style="display:inline;">
-        <button type="submit">Reject</button>
+    <form method="post" action="{{ url_for('reject_report', report_id=report.id) }}">
+        <button class="btn btn-warning btn-sm action-btn mt-1" type="submit"
+                {% if report.status == 'rejected' %}disabled{% endif %}>
+            Reject
+        </button>
     </form>
     {% if report.reported_user %}
     <!-- Soft Delete User -->
-    <form method="post" action="{{ url_for('delete_user_by_report', report_id=report.id) }}" style="display:inline;">
-        <button type="submit">Delete User</button>
+    <form method="post" action="{{ url_for('delete_user_by_report', report_id=report.id) }}">
+        <button class="btn btn-danger btn-sm action-btn mt-1" type="submit"
+                {% if report.status in ['resolved', 'rejected'] %}disabled{% endif %}>
+            Delete User
+        </button>
     </form>
     {% elif report.reported_snackbar %}
     <!-- Soft Delete Snackbar -->
-    <form method="post" action="{{ url_for('delete_snackbar_by_report', report_id=report.id) }}" style="display:inline;">
-        <button type="submit">Delete Snackbar</button>
+    <form method="post" action="{{ url_for('delete_snackbar_by_report', report_id=report.id) }}">
+        <button class="btn btn-danger btn-sm action-btn mt-1" type="submit"
+                {% if report.status in ['resolved', 'rejected'] %}disabled{% endif %}>
+            Delete Snackbar
+        </button>
     </form>
     {% endif %}
+</div>
 {% endmacro %}
 
 <!-- Helper function to render reports in a table -->
 {% macro report_table(reports, type_label) %}
 <h2>{{ type_label }}</h2>
 {% if reports %}
-    <table border="1">
-        <tr>
-            <th>Reported Entity</th>
-            <th>Reporter</th>
-            <th>Reason</th>
-            <th>Details</th>
-            <th>Timestamp</th>
-            <th>Actions</th>
-        </tr>
-        {% for report in reports %}
-        <tr>
-            <td>
-                {% if report.reported_user %}
-                <a href="{{ url_for('user', username=report.reported_user.username) }}">
-                    {{ report.reported_user.username }}
-                </a>
-                {% elif report.reported_snackbar %}
-                <a href="{{ url_for('snackbar', snackbar_name=report.reported_snackbar.name) }}">
-                    {{ report.reported_snackbar.name }}
-                </a>
-                {% endif %}
-            </td>
-            <td>
-                <a href="{{ url_for('user', username=report.reporter.username) }}">
-                    {{ report.reporter.username }}
-                </a>
-            </td>
-            <td>{{ report.reason }}</td>
-            <td>{{ report.details }}</td>
-            <td>{{ report.timestamp }}</td>
-            <td>{{ report_actions(report) }}</td>  <!-- this calls the macro for action buttons, prevents duplication :)-->
-        </tr>
-        {% endfor %}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 20%;">Reported Entity</th>
+                <th style="width: 15%;">Reporter</th>
+                <th style="width: 20%;">Reason</th>
+                <th style="width: 30%;">Details</th>
+                <th style="width: 15%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>
+                    {% if report.reported_user %}
+                    <a href="{{ url_for('user', username=report.reported_user.username) }}">
+                        {{ report.reported_user.username }}
+                    </a>
+                    {% elif report.reported_snackbar %}
+                    <a href="{{ url_for('snackbar', snackbar_name=report.reported_snackbar.name) }}">
+                        {{ report.reported_snackbar.name }}
+                    </a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('user', username=report.reporter.username) }}">
+                        {{ report.reporter.username }}
+                    </a>
+                </td>
+                <td>{{ report.reason }}</td>
+                <td>{{ report.details }}</td>
+                <td>{{ report_actions(report) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+</div>
 {% else %}
-    <p>No {{ type_label.lower() }} found.</p>
+<p>No {{ type_label.lower() }} found.</p>
 {% endif %}
 {% endmacro %}
 

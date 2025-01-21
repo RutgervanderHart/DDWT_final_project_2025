@@ -33,3 +33,28 @@ h1 {
     margin-bottom: 1.5rem;
     color: #333;
 }
+
+
+.table td {
+    word-wrap: break-word; /* Break long words */
+    max-width: 200px; /* Limit max width for text */
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.action-btn {
+    width: 100%;
+    min-width: 120px;
+}
+
+.action-btn:disabled {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+    border-color: #f8f9fa !important;
+}
+
