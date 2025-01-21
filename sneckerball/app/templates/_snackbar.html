@@ -1,7 +1,14 @@
-<form action="{{ url_for('snackbar', snackbar_name=snackbar.name) }}">
-    <label>{{ snackbar.name }}</label>
-    <input type="submit" value="view">
-    {% if current_user ==  snackbar.owner %}
-    <label><a href="{{ url_for('edit_snackbar', snackbar_name=snackbar.name) }}">Edit</a></label>
-    {% endif %}
-</form>
+<div class="card h-100 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">{{ snackbar.name }}</h5>
+        <p class="card-text">{{ snackbar.about }}</p>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <form action="{{ url_for('snackbar', snackbar_name=snackbar.name) }}" method="get" class="mb-0">
+            <button type="submit" class="btn btn-primary btn-sm">Bekijk Snackbar</button>
+        </form>
+        {% if current_user == snackbar.owner %}
+            <a href="{{ url_for('edit_snackbar', snackbar_name=snackbar.name) }}" class="btn btn-secondary btn-sm">Edit</a>
+        {% endif %}
+    </div>
+</div>

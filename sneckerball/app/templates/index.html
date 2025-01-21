@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sneckerball!</h1>
+<h1 class="mb-4 text-center">Welcome to Sneckerball!</h1>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
     {% for snackbar in snackbars %}
-        {% include '_snackbar.html' %}
+        <div class="col">
+            {% include '_snackbar.html' %}
+        </div>
     {% endfor %}
+</div>
 {% endblock %}

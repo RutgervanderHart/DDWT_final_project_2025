@@ -1,36 +1,65 @@
 <!doctype html>
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - sneckerball</title>
-      {% else %}
-      <title>sneckerball</title>
-      {% endif %}
-    </head>
-    <body>
-        <div>sneckerball: 
-            <a href="{{ url_for('index') }}">Home</a>
-                {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
-            {% else %}
-                <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-                <a href="{{ url_for('add_snackbar') }}">Add Snackbar</a>
-                <a href="{{ url_for('logout') }}">Logout</a>
-                {% if current_user.is_admin %}
-                    <a href="{{ url_for('admin_reports') }}">Admin Panel</a>
-                {% endif %}
-            {% endif %}
-        </div>
-        <hr>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else 'sneckerball' }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('index') }}">Sneckerball</a>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        {% if current_user.is_anonymous %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('add_snackbar') }}">Add Snackbar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                        {% if current_user.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_reports') }}">Admin Panel</a>
+                        </li>
+                        {% endif %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="flex-grow-1 container my-4">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
+        <div class="alert alert-info">
             {% for message in messages %}
-            <li>{{ message }}</li>
+            <div>{{ message }}</div>
             {% endfor %}
-        </ul>
+        </div>
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
-    </body>
+    </main>
+    <footer class="bg-light text-center py-3">
+        <p class="mb-0">&copy; 2025 Sneckerball. All Rights Reserved.</p>
+    </footer>
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

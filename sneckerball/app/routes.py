@@ -29,6 +29,17 @@ def snackbar(snackbar_name):
     ).all()
     return render_template('snackbar.html', snackbar=current_snackbar,reviews=reviews)
 
+@app.route('/snackbars')
+def snackbars():
+    snackbars = Snackbar.query.filter_by(is_deleted=False).all()
+    return render_template('snackbars.html', snackbars=snackbars)
+
+@app.route('/snackbars/<int:id>')
+def snackbar_details(id):
+    snackbar = Snackbar.query.get_or_404(id)
+    return render_template('snackbar_details.html', snackbar=snackbar)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
