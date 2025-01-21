@@ -69,7 +69,8 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        is_genieter = form.role.data == 'genieter'
+        user = User(username=form.username.data, email=form.email.data, is_genieter=is_genieter)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -143,14 +144,18 @@ def edit_review(review):
 @app.route('/add_snackbar', methods=['GET', 'POST'])
 @login_required
 def add_snackbar():
+    if current_user.is_genieter:
+        flash('Only Snackbar-houders can add snackbars!')
+        return redirect(url_for('index'))
     form = AddSnackbarForm()
     if form.validate_on_submit():
-        snackbar = Snackbar(name=form.name.data, about=form.about.data,owner= current_user )
+        snackbar = Snackbar(name=form.name.data, about=form.about.data, owner=current_user)
         db.session.add(snackbar)
         db.session.commit()
-        flash('Congratulations, you succesfully added a snackbar!')
+        flash('Your snackbar has been added.')
         return redirect(url_for('index'))
     return render_template('add_snackbar.html', title='Add Snackbar', form=form)
+
 
 @app.route('/write_review/<snackbar_name>', methods=['GET', 'POST'])
 @login_required
@@ -330,3 +335,18 @@ def delete_snackbar_by_report(report_id):
     else:
         flash("No reported snackbar found in this report.")
     return redirect(url_for('admin_reports'))
+
+@app.route('/add_review', methods=['GET', 'POST'])
+@login_required
+def add_review():
+    if not current_user.is_genieter:
+        flash('Only Snackbar-genieters can add reviews!')
+        return redirect(url_for('index'))
+    form = ReviewForm()
+    if form.validate_on_submit():
+        review = Review(body=form.body.data, author=current_user)
+        db.session.add(review)
+        db.session.commit()
+        flash('Your review has been added.')
+        return redirect(url_for('index'))
+    return render_template('add_review.html', title='Add Review', form=form)

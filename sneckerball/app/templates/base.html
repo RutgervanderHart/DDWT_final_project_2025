@@ -28,7 +28,11 @@
                             <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('add_snackbar') }}">Add Snackbar</a>
+                            {% if current_user.is_genieter %}
+                               <a class="nav-link" href="{{ url_for('add_review') }}">Add Review</a>
+                            {% else %}
+                             <a class="nav-link" href="{{ url_for('add_snackbar') }}">Add Snackbar</a>
+                            {% endif %}
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>

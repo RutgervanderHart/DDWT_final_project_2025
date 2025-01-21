@@ -28,6 +28,8 @@ class User(UserMixin, db.Model):
         server_default=sa.sql.expression.literal(False),
         nullable=False
     )
+    is_genieter = db.Column(db.Boolean, default=True)  # True = Snackbar-genieter, False = Snackbar-houder
+
 
     #  Fields for token-based authentication
     token: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True, unique=True)

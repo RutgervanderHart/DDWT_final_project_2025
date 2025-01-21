@@ -17,6 +17,10 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    role = RadioField('Role', choices=[
+        ('genieter', 'Snackbar-genieter'),
+        ('houder', 'Snackbar-houder')
+    ], validators=[DataRequired()])
     submit = SubmitField('Register')
 
     def validate_username(self, username):
