@@ -58,3 +58,7 @@ h1 {
     border-color: #f8f9fa !important;
 }
 
+.header_footer {
+    background-color: lightgray;
+    border-top: none;
+}
