@@ -48,8 +48,13 @@ def create_user():
     if db.session.scalar(sa.select(User).where(User.email == data['email'], User.is_deleted == False)):
         return bad_request("Please use a different email address.")
 
+    role = data.get('role', 'genieter').lower()
+    if role not in ['genieter', 'houder']:
+        return bad_request("Role must be 'genieter' or 'houder'.")
+
     user = User()
     user.from_dict(data, new_user=True)
+    user.is_genieter = (role == 'genieter')
     db.session.add(user)
     db.session.commit()
 

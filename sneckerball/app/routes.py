@@ -144,7 +144,7 @@ def edit_review(review):
 @app.route('/add_snackbar', methods=['GET', 'POST'])
 @login_required
 def add_snackbar():
-    if current_user.is_genieter:
+    if current_user.is_genieter or current_user.is_admin:
         flash('Only Snackbar-houders can add snackbars!')
         return redirect(url_for('index'))
     form = AddSnackbarForm()

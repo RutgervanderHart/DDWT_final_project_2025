@@ -104,6 +104,8 @@ class User(UserMixin, db.Model):
         for field in ['username', 'email', 'about_me']:
             if field in data:
                 setattr(self, field, data[field])
+        if 'role' in data:
+            self.is_genieter = (data['role'].lower() == 'genieter')
         # If creating a brand-new user (POST /api/users), set password
         if new_user and 'password' in data:
             self.set_password(data['password'])
