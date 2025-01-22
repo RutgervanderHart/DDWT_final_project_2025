@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-4 text-center">Welcome to Sneckerball!</h1>
+<h1 class="mb-4 text-center">Welcome to</h1>
+<div class="text-center">
+    <img src="{{ url_for('static', filename='sneckerball.png') }}" 
+         alt="Sneckerball Logo" 
+         class="img-fluid" 
+         style="max-width: 400px; height: auto; margin-top: -10px; margin-bottom: 10px;">
+</div>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
     {% for snackbar in snackbars %}
         <div class="col">
