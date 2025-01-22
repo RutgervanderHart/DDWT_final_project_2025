@@ -1,0 +1,88 @@
+# Sneckerball API Demo
+# Demonstrating Create User and Token-Based API Functionality with HTTPie
+
+# --- Step 1: Create a New User (Genieter Role) ---
+http POST http://127.0.0.1:5000/api/users username="test_genieter" email="genieter@example.com" password="securepassword123"
+
+# --- Step 2: Create a New User (Houder Role) ---
+http POST http://127.0.0.1:5000/api/users username="test_houder" email="houder@example.com" password="securepassword123" role="houder"
+
+# --- Step 3: Obtain Tokens for the Users ---
+
+# Obtain a Token for the Genieter User
+http -a test_genieter:securepassword123 POST http://127.0.0.1:5000/api/tokens
+
+# Save the token into an environment variable
+# Linux/MacOS:
+export TOKEN_GENIETER="your_genieter_token_here" # Replace 'your_genieter_token_here' with the actual token from the command
+# Windows (Command Prompt):
+set TOKEN_GENIETER=your_genieter_token_here
+# Windows (PowerShell):
+$env:TOKEN_GENIETER = "your_genieter_token_here"
+
+# Obtain a Token for the Houder User
+http -a test_houder:securepassword123 POST http://127.0.0.1:5000/api/tokens
+
+# Save the token into an environment variable
+# Linux/MacOS:
+export TOKEN_HOUDER="your_houder_token_here" # Replace 'your_houder_token_here' with the actual token from the command
+# Windows (Command Prompt):
+set TOKEN_HOUDER=your_houder_token_here
+# Windows (PowerShell):
+$env:TOKEN_HOUDER = "your_houder_token_here"
+
+# --- Step 4: Use the Tokens for Authenticated Requests ---
+
+# Retrieve All Snackbars (Genieter)
+# Linux/MacOS:
+http GET http://127.0.0.1:5000/api/snackbars "Authorization:Bearer $TOKEN_GENIETER"
+# Windows (Command Prompt):
+http GET http://127.0.0.1:5000/api/snackbars "Authorization:Bearer %TOKEN_GENIETER%"
+# Windows (PowerShell):
+http GET http://127.0.0.1:5000/api/snackbars "Authorization:Bearer $env:TOKEN_GENIETER"
+
+# Create a New Snackbar (Houder Only)
+# Linux/MacOS:
+http POST http://127.0.0.1:5000/api/snackbars "Authorization:Bearer $TOKEN_HOUDER" name="API Snackbar" about="Lekkere snacks"
+# Windows (Command Prompt):
+http POST http://127.0.0.1:5000/api/snackbars "Authorization:Bearer %TOKEN_HOUDER%" name="API Snackbar" about="Lekkere snacks"
+# Windows (PowerShell):
+http POST http://127.0.0.1:5000/api/snackbars "Authorization:Bearer $env:TOKEN_HOUDER" name="API Snackbar" about="Lekkere snacks"
+
+# Create a Review for a Snackbar (Genieter)
+# Replace <snackbar_id> with the actual ID of the snackbar to review
+# Linux/MacOS:
+http POST http://127.0.0.1:5000/api/snackbars/<snackbar_id>/reviews "Authorization:Bearer $TOKEN_GENIETER" body="lekker hoor!"
+# Windows (Command Prompt):
+http POST http://127.0.0.1:5000/api/snackbars/<snackbar_id>/reviews "Authorization:Bearer %TOKEN_GENIETER%" body="lekker hoor!"
+# Windows (PowerShell):
+http POST http://127.0.0.1:5000/api/snackbars/<snackbar_id>/reviews "Authorization:Bearer $env:TOKEN_GENIETER" body="lekker hoor!"
+
+# --- Additional Commands ---
+
+# Revoke the Token for the Genieter (Logout)
+# Linux/MacOS:
+http DELETE http://127.0.0.1:5000/api/tokens "Authorization:Bearer $TOKEN_GENIETER"
+# Windows (Command Prompt):
+http DELETE http://127.0.0.1:5000/api/tokens "Authorization:Bearer %TOKEN_GENIETER%"
+# Windows (PowerShell):
+http DELETE http://127.0.0.1:5000/api/tokens "Authorization:Bearer $env:TOKEN_GENIETER"
+
+# Revoke the Token for the Houder (Logout)
+# Linux/MacOS:
+http DELETE http://127.0.0.1:5000/api/tokens "Authorization:Bearer $TOKEN_HOUDER"
+# Windows (Command Prompt):
+http DELETE http://127.0.0.1:5000/api/tokens "Authorization:Bearer %TOKEN_HOUDER%"
+# Windows (PowerShell):
+http DELETE http://127.0.0.1:5000/api/tokens "Authorization:Bearer $env:TOKEN_HOUDER"
+
+# Cleanup the environment variables
+# Linux/MacOS:
+unset TOKEN_GENIETER
+unset TOKEN_HOUDER
+# Windows (Command Prompt):
+set TOKEN_GENIETER=
+set TOKEN_HOUDER=
+# Windows (PowerShell):
+Remove-Item Env:TOKEN_GENIETER
+Remove-Item Env:TOKEN_HOUDER

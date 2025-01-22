@@ -118,7 +118,8 @@ class User(UserMixin, db.Model):
         If an existing token has more than 60s to live, re-use that one.
         """
         now = datetime.now(timezone.utc)
-        if self.token and self.token_expiration and self.token_expiration > now + timedelta(seconds=60):
+        if self.token and self.token_expiration and self.token_expiration.replace(
+                tzinfo=timezone.utc) > now + timedelta(seconds=60):
             return self.token
         self.token = secrets.token_hex(16)  # 32-char hex string
         self.token_expiration = now + timedelta(seconds=expires_in)
